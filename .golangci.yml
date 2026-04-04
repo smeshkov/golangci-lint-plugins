@@ -1,0 +1,10 @@
+linters-settings:
+  custom:
+    modernfor:
+      type: module
+      description: Enforces Go 1.22 range over int
+      original-url: github.com/smeshkov/golangci-lint-plugins
+
+linters:
+  enable:
+    - modernfor
