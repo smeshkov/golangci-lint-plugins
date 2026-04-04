@@ -31,7 +31,7 @@ curl -sL https://raw.githubusercontent.com/smeshkov/golangci-lint-plugins/master
 
 Install to a custom directory:
 ```bash
-curl -sL https://raw.githubusercontent.com/smeshkov/golangci-lint-plugins/master/install.sh | INSTALL_DIR=./bin bash
+curl -sL https://raw.githubusercontent.com/smeshkov/golangci-lint-plugins/master/install.sh | INSTALL_DIR=~/bin bash
 ```
 
 ## Integrating into Another Project
