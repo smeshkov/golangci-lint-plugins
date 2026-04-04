@@ -17,6 +17,23 @@ Custom linter plugins for [golangci-lint](https://golangci-lint.run/) v2 using t
    ```
    The tag must be a valid [Go module version](https://go.dev/ref/mod#versions) (e.g. `v0.1.0`, `v1.2.3`).
 
+## Installation
+
+Install or update to the latest version:
+```bash
+curl -sL https://raw.githubusercontent.com/smeshkov/golangci-lint-plugins/master/install.sh | bash
+```
+
+Install a specific version:
+```bash
+curl -sL https://raw.githubusercontent.com/smeshkov/golangci-lint-plugins/master/install.sh | VERSION=v0.1.0 bash
+```
+
+Install to a custom directory:
+```bash
+curl -sL https://raw.githubusercontent.com/smeshkov/golangci-lint-plugins/master/install.sh | INSTALL_DIR=./bin bash
+```
+
 ## Integrating into Another Project
 
 ### Prerequisites
