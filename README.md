@@ -75,3 +75,37 @@ golangci-lint custom
 ```
 
 The custom binary is a drop-in replacement for `golangci-lint` — all standard flags and linters still work alongside the custom plugins.
+
+### GitHub Actions CI
+
+Add the following workflow to `.github/workflows/lint.yml` in your target project:
+
+```yaml
+name: Lint
+
+on:
+  push:
+    branches: [master, main]
+  pull_request:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+
+      # Install golangci-lint v2
+      - run: go install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@v2.11.4
+
+      # Build the custom binary with plugins
+      - run: golangci-lint custom
+
+      # Run linting
+      - run: ./custom-gcl run ./...
+```
+
+This builds the custom binary from your `.custom-gcl.yml` and runs it. The plugin module is fetched automatically via the Go module proxy using the `version` specified in `.custom-gcl.yml`.
