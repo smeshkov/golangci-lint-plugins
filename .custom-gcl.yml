@@ -1,5 +1,5 @@
-version: v1.56.2
+version: v1.64.8
 plugins:
   - module: 'github.com/smeshkov/golangci-lint-plugins'
     import: 'github.com/smeshkov/golangci-lint-plugins/modernfor/plugin'
-    version: v1.0.0
+    path: /Users/sergeymeshkov/src/golangci-lint-plugins
