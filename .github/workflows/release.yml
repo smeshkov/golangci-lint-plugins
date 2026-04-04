@@ -1,0 +1,86 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            goos: linux
+            goarch: amd64
+          - os: ubuntu-latest
+            goos: linux
+            goarch: arm64
+          - os: macos-latest
+            goos: darwin
+            goarch: amd64
+          - os: macos-latest
+            goos: darwin
+            goarch: arm64
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+
+      - name: Install golangci-lint
+        run: go install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@v2.11.4
+
+      - name: Build custom binary
+        env:
+          GOOS: ${{ matrix.goos }}
+          GOARCH: ${{ matrix.goarch }}
+        run: golangci-lint custom --version v2.11.4 --name custom-gcl
+
+      - name: Package binary
+        run: tar -czf custom-gcl-${{ matrix.goos }}-${{ matrix.goarch }}.tar.gz custom-gcl
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: custom-gcl-${{ matrix.goos }}-${{ matrix.goarch }}
+          path: custom-gcl-${{ matrix.goos }}-${{ matrix.goarch }}.tar.gz
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/download-artifact@v4
+        with:
+          merge-multiple: true
+
+      - name: Extract changelog for this version
+        id: changelog
+        run: |
+          # Extract the section between this version's header and the next version header (or EOF)
+          TAG="${{ github.ref_name }}"
+          NOTES=$(sed -n "/^## \[${TAG}\]/,/^## \[/{/^## \[${TAG}\]/d;/^## \[/d;p;}" CHANGELOG.md)
+          {
+            echo "NOTES<<EOF"
+            echo "$NOTES"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Create release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create ${{ github.ref_name }} \
+            --repo ${{ github.repository }} \
+            --title "${{ github.ref_name }}" \
+            --notes "${{ steps.changelog.outputs.NOTES }}" \
+            custom-gcl-*.tar.gz

@@ -78,7 +78,44 @@ The custom binary is a drop-in replacement for `golangci-lint` — all standard 
 
 ### GitHub Actions CI
 
-Add the following workflow to `.github/workflows/lint.yml` in your target project:
+There are two approaches: download a pre-built binary from releases (faster), or build from source.
+
+#### Option A: Pre-built binary (recommended)
+
+Pre-built binaries are published to [GitHub Releases](https://github.com/smeshkov/golangci-lint-plugins/releases) on every tag. No `.custom-gcl.yml` needed in the target project.
+
+```yaml
+name: Lint
+
+on:
+  push:
+    branches: [master, main]
+  pull_request:
+
+env:
+  CUSTOM_GCL_VERSION: v0.1.0  # pin to a release tag
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+
+      - name: Download custom-gcl
+        run: |
+          curl -sL "https://github.com/smeshkov/golangci-lint-plugins/releases/download/${CUSTOM_GCL_VERSION}/custom-gcl-linux-amd64.tar.gz" | tar xz
+          chmod +x custom-gcl
+
+      - run: ./custom-gcl run ./...
+```
+
+#### Option B: Build from source
+
+Requires `.custom-gcl.yml` with the plugin version in the target project (see Step 1 above).
 
 ```yaml
 name: Lint
@@ -98,14 +135,9 @@ jobs:
         with:
           go-version-file: go.mod
 
-      # Install golangci-lint v2
       - run: go install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@v2.11.4
 
-      # Build the custom binary with plugins
       - run: golangci-lint custom
 
-      # Run linting
       - run: ./custom-gcl run ./...
 ```
-
-This builds the custom binary from your `.custom-gcl.yml` and runs it. The plugin module is fetched automatically via the Go module proxy using the `version` specified in `.custom-gcl.yml`.
