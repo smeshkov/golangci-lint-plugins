@@ -11,8 +11,8 @@ Custom golangci-lint plugins (module plugin system). Each plugin is an `analysis
 ```bash
 make build           # Build custom golangci-lint binary to build/custom-gcl
 make clean           # Remove build artifacts
-make tag TAG=v0.1.0  # Create annotated git tag
-make release TAG=v0.1.0  # Tag and push to remote
+make tag TAG=0.1.0   # Create annotated git tag
+make release TAG=0.1.0   # Tag and push to remote
 ```
 
 Requires `golangci-lint` v2 installed (`go install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@latest`).
@@ -33,3 +33,9 @@ Key config files:
 1. Create `<name>/` package with an exported `Analyzer` variable
 2. Create `<name>/plugin/plugin.go` with the `New` function returning the analyzer
 3. Add the plugin to `.custom-gcl.yml` and enable it in `.golangci.yml`
+
+## Development process
+
+- `make lint` and `make test` must pass.
+- always make sure to add tests for any new code you write.
+- tests should be placed next to the code they test.
