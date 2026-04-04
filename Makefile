@@ -2,13 +2,16 @@ TAG ?= 0.0.5
 BINARY_NAME := custom-gcl
 GOLANGCI_LINT_VERSION := v2.11.4
 
-.PHONY: build clean tag release
+.PHONY: build clean test tag release
 
 build:
 	golangci-lint custom --version $(GOLANGCI_LINT_VERSION) --name build/$(BINARY_NAME)
 
 clean:
 	rm -rf build/*
+
+test:
+	go test ./...
 
 # Usage: make tag V=v0.1.0
 tag:
