@@ -10,6 +10,27 @@ build:
 clean:
 	rm -rf build/*
 
+checkfmt: ## Check if the code is formatted
+	@if [ -n "$$(gofmt -l .)" ]; then \
+		echo "Go code is not formatted. Run 'make fmt'."; \
+		gofmt -d .; \
+		exit 1; \
+	fi
+
+fmt: ## Format the code
+	go fmt ./...
+
+vet: ## Run go vet
+	go vet ./...
+
+lint: ## Run custom-gcl if installed
+	@if [ -f "build/$(BINARY_NAME)" ]; then \
+		./build/$(BINARY_NAME) run ./...; \
+	else \
+		echo "build/$(BINARY_NAME) not found. Run 'make build' first."; \
+		exit 1; \
+	fi
+
 test:
 	go test ./...
 

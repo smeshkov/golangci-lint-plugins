@@ -36,6 +36,6 @@ Key config files:
 
 ## Development process
 
-- `make lint` and `make test` must pass.
+- `make checkfmt`, `make lint` and `make test` must pass.
 - always make sure to add tests for any new code you write.
 - tests should be placed next to the code they test.
