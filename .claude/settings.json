@@ -2,11 +2,11 @@
   "permissions": {
     "allow": [
       "Bash(git *)",
-      "edit .github/*",
-      "edit modernfor/*",
-      "edit Makefile",
-      "edit CLAUDE.md",
-      "edit CHANGELOG.md",
+      "Edit .github/*",
+      "Edit modernfor/*",
+      "Edit Makefile",
+      "Edit CLAUDE.md",
+      "Edit CHANGELOG.md",
       "Bash(go:*)",
       "Bash(go run *)",
       "Bash(go build *)",
@@ -18,8 +18,8 @@
       "Bash(make vet)"
     ],
     "deny": [
-      "edit _docs/*",
-      "rm -rf *"
+      "Edit _docs/*",
+      "Bash(rm -rf *)"
     ]
   }
 }
