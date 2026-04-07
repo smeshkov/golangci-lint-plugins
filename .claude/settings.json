@@ -2,8 +2,8 @@
   "permissions": {
     "allow": [
       "Bash(git *)",
-      "Edit .github/*",
-      "Edit modernfor/*",
+      "Edit .github/**",
+      "Edit modernfor/**",
       "Edit Makefile",
       "Edit CLAUDE.md",
       "Edit CHANGELOG.md",
@@ -18,7 +18,8 @@
       "Bash(make vet)"
     ],
     "deny": [
-      "Edit _docs/*",
+      "Edit _docs/**",
+      "Edit .claude/**",
       "Bash(rm -rf *)"
     ]
   }
