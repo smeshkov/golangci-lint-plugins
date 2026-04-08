@@ -25,13 +25,19 @@ jobs:
           - os: macos-latest
             goos: darwin
             goarch: arm64
+          - os: windows-latest
+            goos: windows
+            goarch: amd64
+          - os: windows-latest
+            goos: windows
+            goarch: arm64
 
     runs-on: ${{ matrix.os }}
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
-      - uses: actions/setup-go@v5
+      - uses: actions/setup-go@v6
         with:
           go-version-file: go.mod
 
@@ -44,13 +50,19 @@ jobs:
           GOARCH: ${{ matrix.goarch }}
         run: golangci-lint custom --version v2.11.4 --name custom-gcl
 
-      - name: Package binary
+      - name: Package binary (unix)
+        if: matrix.goos != 'windows'
         run: tar -czf custom-gcl-${{ matrix.goos }}-${{ matrix.goarch }}.tar.gz custom-gcl
+
+      - name: Package binary (windows)
+        if: matrix.goos == 'windows'
+        shell: pwsh
+        run: Compress-Archive -Path custom-gcl.exe -DestinationPath custom-gcl-windows-${{ matrix.goarch }}.zip
 
       - uses: actions/upload-artifact@v4
         with:
           name: custom-gcl-${{ matrix.goos }}-${{ matrix.goarch }}
-          path: custom-gcl-${{ matrix.goos }}-${{ matrix.goarch }}.tar.gz
+          path: custom-gcl-${{ matrix.goos }}-${{ matrix.goarch }}.*
 
   release:
     needs: build
@@ -83,4 +95,5 @@ jobs:
             --repo ${{ github.repository }} \
             --title "${{ github.ref_name }}" \
             --notes "${{ steps.changelog.outputs.NOTES }}" \
-            custom-gcl-*.tar.gz
+            custom-gcl-*.tar.gz \
+            custom-gcl-*.zip
