@@ -11,7 +11,7 @@ func init() {
 	register.Plugin("useany", New)
 }
 
-func New(conf any) (register.LinterPlugin, error) {
+func New(conf any) (register.LinterPlugin, error) { //nolint:ireturn
 	return &Plugin{}, nil
 }
 

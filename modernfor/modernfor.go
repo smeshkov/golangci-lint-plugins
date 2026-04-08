@@ -1,6 +1,7 @@
 package modernfor
 
 import (
+	"errors"
 	"go/ast"
 	"go/token"
 
@@ -8,6 +9,8 @@ import (
 	"golang.org/x/tools/go/analysis/passes/inspect"
 	"golang.org/x/tools/go/ast/inspector"
 )
+
+var errInspectNotFound = errors.New("inspect analyzer not found")
 
 // Analyzer exports the linter so golangci-lint can use it.
 var Analyzer = &analysis.Analyzer{
@@ -18,7 +21,10 @@ var Analyzer = &analysis.Analyzer{
 }
 
 func run(pass *analysis.Pass) (any, error) {
-	inspect := pass.ResultOf[inspect.Analyzer].(*inspector.Inspector)
+	inspect, ok := pass.ResultOf[inspect.Analyzer].(*inspector.Inspector)
+	if !ok {
+		return nil, errInspectNotFound
+	}
 
 	// We only care about traditional `for` loops (not `for ... range`)
 	nodeFilter := []ast.Node{
@@ -26,7 +32,10 @@ func run(pass *analysis.Pass) (any, error) {
 	}
 
 	inspect.Preorder(nodeFilter, func(n ast.Node) {
-		forStmt := n.(*ast.ForStmt)
+		forStmt, ok := n.(*ast.ForStmt)
+		if !ok {
+			return
+		}
 
 		// A traditional counting loop has an Init, Cond, and Post statement.
 		if forStmt.Init == nil || forStmt.Cond == nil || forStmt.Post == nil {
