@@ -7,6 +7,7 @@ Custom linter plugins for [golangci-lint](https://golangci-lint.run/) v2 using t
 | Plugin | Description |
 |--------|-------------|
 | `modernfor` | Enforces Go 1.22+ `for i := range N` syntax instead of `for i := 0; i < N; i++` |
+| `useany` | Enforces using `any` instead of `interface{}` |
 
 ## Releasing a New Version
 
@@ -53,6 +54,9 @@ plugins:
   - module: 'github.com/smeshkov/golangci-lint-plugins'
     import: 'github.com/smeshkov/golangci-lint-plugins/modernfor/plugin'
     version: v0.1.0  # use the latest published tag
+  - module: 'github.com/smeshkov/golangci-lint-plugins'
+    import: 'github.com/smeshkov/golangci-lint-plugins/useany/plugin'
+    version: v0.1.0  # use the latest published tag
 ```
 
 For local development (unpublished changes), use `path` instead of `version`:
@@ -61,6 +65,9 @@ version: v2.11.4
 plugins:
   - module: 'github.com/smeshkov/golangci-lint-plugins'
     import: 'github.com/smeshkov/golangci-lint-plugins/modernfor/plugin'
+    path: /absolute/path/to/golangci-lint-plugins
+  - module: 'github.com/smeshkov/golangci-lint-plugins'
+    import: 'github.com/smeshkov/golangci-lint-plugins/useany/plugin'
     path: /absolute/path/to/golangci-lint-plugins
 ```
 
@@ -79,6 +86,9 @@ linters:
       modernfor:
         type: module
         description: Enforces Go 1.22 range over int
+      useany:
+        type: module
+        description: Enforces using 'any' instead of 'interface{}'
 ```
 
 ### Step 3: Build and Run
