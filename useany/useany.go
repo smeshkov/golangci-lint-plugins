@@ -1,3 +1,4 @@
+// Package useany provides a linter that enforces using 'any' instead of 'interface{}'.
 package useany
 
 import (

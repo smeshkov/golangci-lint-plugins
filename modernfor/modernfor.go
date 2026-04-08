@@ -1,3 +1,4 @@
+// Package modernfor provides a linter that enforces Go 1.22 integer range loop syntax.
 package modernfor
 
 import (
@@ -21,7 +22,7 @@ var Analyzer = &analysis.Analyzer{
 }
 
 func run(pass *analysis.Pass) (any, error) {
-	inspect, ok := pass.ResultOf[inspect.Analyzer].(*inspector.Inspector)
+	insp, ok := pass.ResultOf[inspect.Analyzer].(*inspector.Inspector)
 	if !ok {
 		return nil, errInspectNotFound
 	}
@@ -31,34 +32,40 @@ func run(pass *analysis.Pass) (any, error) {
 		(*ast.ForStmt)(nil),
 	}
 
-	inspect.Preorder(nodeFilter, func(n ast.Node) {
+	insp.Preorder(nodeFilter, func(n ast.Node) {
 		forStmt, ok := n.(*ast.ForStmt)
 		if !ok {
 			return
 		}
 
-		// A traditional counting loop has an Init, Cond, and Post statement.
-		if forStmt.Init == nil || forStmt.Cond == nil || forStmt.Post == nil {
-			return
-		}
-
-		// 1. Check Init: e.g., `i := 0`
-		_, okInit := forStmt.Init.(*ast.AssignStmt)
-		// 2. Check Cond: e.g., `i < N`
-		cond, okCond := forStmt.Cond.(*ast.BinaryExpr)
-		// 3. Check Post: e.g., `i++`
-		inc, okPost := forStmt.Post.(*ast.IncDecStmt)
-
-		if !okInit || !okCond || !okPost {
-			return
-		}
-
-		// Simplified check: If the condition uses `<` and the post increments `++`,
-		// flag it as a candidate for the new Go 1.22 range syntax.
-		if cond.Op == token.LSS && inc.Tok == token.INC {
+		if isCountingLoop(forStmt) {
 			pass.Reportf(forStmt.Pos(), "use Go 1.22 'for ... := range N' syntax instead of traditional for-loop")
 		}
 	})
 
 	return nil, nil
+}
+
+// isCountingLoop checks whether a for statement is a traditional counting loop
+// (e.g., `for i := 0; i < N; i++`) that could use Go 1.22 range syntax.
+func isCountingLoop(forStmt *ast.ForStmt) bool {
+	if forStmt.Init == nil || forStmt.Cond == nil || forStmt.Post == nil {
+		return false
+	}
+
+	if _, ok := forStmt.Init.(*ast.AssignStmt); !ok {
+		return false
+	}
+
+	cond, condOk := forStmt.Cond.(*ast.BinaryExpr)
+	if !condOk {
+		return false
+	}
+
+	inc, incOk := forStmt.Post.(*ast.IncDecStmt)
+	if !incOk {
+		return false
+	}
+
+	return cond.Op == token.LSS && inc.Tok == token.INC
 }
