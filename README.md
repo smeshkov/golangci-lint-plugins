@@ -9,15 +9,6 @@ Custom linter plugins for [golangci-lint](https://golangci-lint.run/) v2 using t
 | `modernfor` | Enforces Go 1.22+ `for i := range N` syntax instead of `for i := 0; i < N; i++` |
 | `useany` | Enforces using `any` instead of `interface{}` |
 
-## Releasing a New Version
-
-1. Commit your changes and push to `master`.
-2. Tag and push:
-   ```bash
-   make release TAG=v0.1.0
-   ```
-   The tag must be a valid [Go module version](https://go.dev/ref/mod#versions) (e.g. `v0.1.0`, `v1.2.3`).
-
 ## Installation
 
 Install or update to the latest version:
