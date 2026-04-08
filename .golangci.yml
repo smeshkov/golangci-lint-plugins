@@ -1,6 +1,14 @@
 version: "2"
 
 linters:
+  default: all
+  disable:
+    - depguard
+    - exhaustruct
+    - gochecknoglobals
+    - gochecknoinits
+    - nilnil
+    - wsl
   enable:
     - modernfor
     - useany
