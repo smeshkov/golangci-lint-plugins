@@ -1,4 +1,4 @@
-TAG ?= 0.0.6
+TAG ?= 0.0.7
 BINARY_NAME := custom-gcl
 GOLANGCI_LINT_VERSION := v2.11.4
 
