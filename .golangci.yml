@@ -5,8 +5,10 @@ linters:
   disable:
     - depguard
     - exhaustruct
+    - exhaustruct_v5
     - gochecknoglobals
     - gochecknoinits
+    - gomodguard
     - nilnil
     - wsl
   enable:

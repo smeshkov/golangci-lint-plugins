@@ -1,6 +1,6 @@
 TAG ?= 0.0.7
 BINARY_NAME := custom-gcl
-GOLANGCI_LINT_VERSION := v2.11.4
+GOLANGCI_LINT_VERSION := v2.14.0
 
 .PHONY: build clean test tag release
 

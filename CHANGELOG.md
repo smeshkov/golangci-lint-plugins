@@ -8,7 +8,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
 ### Updated
 
-- Go version bump to `1.27`.
+- Bumped Go version to `1.27`.
+- Bumped `golangci-lint` version to `2.14.0`.
 
 ## [v0.0.6] - 2026-04-08
 

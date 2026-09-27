@@ -1,4 +1,4 @@
-version: v2.11.4
+version: v2.14.0
 plugins:
   - module: 'github.com/smeshkov/golangci-lint-plugins'
     import: 'github.com/smeshkov/golangci-lint-plugins/modernfor/plugin'
